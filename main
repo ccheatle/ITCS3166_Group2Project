@@ -1,0 +1,44 @@
+public class ITCS3166_Group2Project {
+
+    public static void main(String[] args) {
+        // TODO code application logic here
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please enter a 32 bit IP address: ");
+        String ipAddress = sc.nextLine();
+        
+        System.out.println(convertIPToBinary(ipAddress));
+        
+    }
+    
+    public static String convertIPToBinary(String s) {
+        String[] octetArray = s.split(Pattern.quote("."));
+        String fullBinaryIPAddress = ""; //int to store the 32 bit binary of input IP
+       
+        for(int i = 0; i < octetArray.length; i++) {
+            int num = Integer.parseInt(octetArray[i]);
+            String n = convertOctetToBinary(num);
+            fullBinaryIPAddress += n;
+        }
+        
+        return fullBinaryIPAddress;
+    }
+    
+    public static String convertOctetToBinary(int num) {
+        int[] binary = {0,0,0,0,0,0,0,0}; //set octet binary array to all zeroes
+        int index = 0;
+        String octet = "";    //store converted binary octet to return
+        while (num > 0) {
+            binary[index] = num % 2; //remainder, gives 0 or 1 for that slot
+            num = num / 2;
+            index++;
+        }
+        
+        //add binary values to octet to return
+        for (int i = binary.length - 1; i >= 0; i--) {
+            octet += binary[i];
+        }
+        
+        return octet;
+    }
+    
+}
