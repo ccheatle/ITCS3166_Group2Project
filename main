@@ -1,7 +1,6 @@
 public class ITCS3166_Group2Project {
 
     public static void main(String[] args) {
-        // TODO code application logic here
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter a 32 bit IP address: ");
         String ipAddress = sc.nextLine();
