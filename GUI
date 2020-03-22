@@ -1,0 +1,173 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package itcs3166_group2project;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.regex.Pattern;
+
+public class IP_GUI extends JFrame implements ActionListener{
+    
+    JFrame frame;
+    private JLabel descripLabel;
+    private JTextField userInput; 
+    private JButton okButton;
+    private JLabel again;
+    private JButton yesButton;
+    private JButton noButton;
+    
+    IP_GUI() {
+        super();
+        
+        //create JFrame
+        frame = new JFrame("Group 2 IP Router Program");
+        setTitle("Group 2 IP Router Program");
+        setLayout(new GridBagLayout());
+        descripLabel = new JLabel();
+        userInput = new JTextField();
+        okButton = new JButton();
+        again = new JLabel();
+        yesButton = new JButton();
+        noButton = new JButton();
+        
+        mainFrame();
+        
+        
+        
+    }
+    public void mainFrame() {
+        //Main frame
+        GridBagConstraints layout = new GridBagConstraints();
+        //label for instructions
+        descripLabel.setText("Please enter an IP address: ");
+        layout.gridx = 1;
+        layout.gridy = 0;
+        layout.insets = new Insets(5,5,5,5);
+        add(descripLabel, layout);
+        
+        //text field for user input of IP address
+        userInput.setPreferredSize(new Dimension(100,30));
+        userInput.setMinimumSize(userInput.getPreferredSize());
+        layout.gridx = 2;
+        layout.gridy = 0;
+        layout.insets = new Insets(5,5,5,5);
+        add(userInput, layout);
+        userInput.setVisible(true);
+        
+        //action listner for the enter key
+        userInput.addKeyListener(new KeyAdapter(){
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    processPacket();
+                }
+            }
+        });
+        
+        //ok button to submit input
+        okButton.setText("OK");
+        okButton.addActionListener(this);
+        layout.gridx = 3;
+        layout.gridy = 0;
+        layout.insets = new Insets(5,5,5,5);
+        add(okButton,layout);
+        okButton.setVisible(true);
+        
+        //again (invisible during main frame)
+        again.setText("Would you like to input another IP address?");
+        layout.gridx = 1;
+        layout.gridy = 1;
+        layout.insets = new Insets(5,5,5,5);
+        add(again, layout);
+        again.setVisible(false);
+        
+        yesButton.setText("Yes");
+        layout.gridx = 0;
+        layout.gridy = 2;
+        layout.insets = new Insets(5,5,5,5);
+        add(yesButton,layout);
+        yesButton.setVisible(false);
+        
+        noButton.setText("No");
+        layout.gridx = 1;
+        layout.gridy = 2;
+        layout.insets = new Insets(5,5,5,5);
+        add(noButton,layout);
+        noButton.setVisible(false);
+        
+    }
+    
+    public void endFrame() {
+        descripLabel.setText("Goodbye!");
+        userInput.setVisible(false);
+        okButton.setVisible(false);
+        again.setVisible(false);
+        yesButton.setVisible(false);
+        noButton.setVisible(false);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        processPacket();
+    }
+    public void processPacket() {
+        //placeholder for IP router program
+        String binaryIPAddress = convertIPToBinary(userInput.getText());
+        descripLabel.setText("Binary address is: " + binaryIPAddress);
+        userInput.setVisible(false);
+        okButton.setVisible(false);
+        
+        again.setVisible(true);
+        yesButton.setVisible(true);
+        noButton.setVisible(true);
+        
+        yesButton.addActionListener(new ActionListener() { 
+            public void actionPerformed(ActionEvent e) {
+                userInput.setText("");
+                mainFrame();
+            }
+        });
+        
+        noButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                endFrame();
+            }
+        });
+    }
+    public static String convertIPToBinary(String s) {
+        String[] octetArray = s.split(Pattern.quote("."));
+        String fullBinaryIPAddress = ""; //int to store the 32 bit binary of input IP
+       
+        for(int i = 0; i < octetArray.length; i++) {
+            int num = Integer.parseInt(octetArray[i]);
+            String n = convertOctetToBinary(num);
+            fullBinaryIPAddress += n;
+        }
+        
+        return fullBinaryIPAddress;
+    }
+    
+    public static String convertOctetToBinary(int num) {
+        int[] binary = {0,0,0,0,0,0,0,0}; //set octet binary array to all zeroes
+        int index = 0;
+        String octet = "";    //store converted binary octet to return
+        while (num > 0) {
+            binary[index] = num % 2; //remainder, gives 0 or 1 for that slot
+            num = num / 2;
+            index++;
+        }
+        
+        //add binary values to octet to return
+        for (int i = binary.length - 1; i >= 0; i--) {
+            octet += binary[i];
+        }
+        
+        return octet;
+    }
+}
